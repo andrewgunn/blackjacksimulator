@@ -6,6 +6,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+*.DS_Store
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -17,15 +18,13 @@
 [Rr]eleases/
 x64/
 x86/
-build/
 bld/
 [Bb]in/
 [Oo]bj/
+.next/
 
 # Visual Studio 2015 cache/options directory
 .vs/
-# Uncomment if you have tasks that create the project's static files in wwwroot
-wwwroot/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -139,17 +138,17 @@ publish/
 # Publish Web Output
 *.[Pp]ublish.xml
 *.azurePubxml
-# TODO: Comment the next line if you want to checkin your web deploy settings 
+# TODO: Comment the next line if you want to checkin your web deploy settings
 # but database connection strings (with potential passwords) will be unencrypted
-*.pubxml
+# *.pubxml
 *.publishproj
 
 # NuGet Packages
 *.nupkg
-# The packages folder can be ignored because of Package Restore
-**/packages/*
 # except build/, which is used as an MSBuild target.
 !**/packages/build/
+# except lerna packages.
+!frontend/packages/*
 # Uncomment if necessary however generally it will be regenerated when needed
 #!**/packages/repositories.config
 
@@ -223,3 +222,33 @@ _Pvt_Extensions
 dotnet-pack/
 dotnet-publish/
 dotnet-test/
+
+# Azurite
+__azurite_db_blob__.json
+__azurite_db_blob_extent__.json
+__azurite_db_queue__.json
+__azurite_db_queue_extent__.json
+__blobstorage__/
+__queuestorage__/
+
+# terraform
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+tfplan
+
+# native apps
+*.ipa
+
+# other
+ngrok.yml
+.DS_Store
+
+# Local Netlify folder
+.netlify
+
+# taskfile
+.task
+Taskfile-local.yml
+
+.idea

@@ -3,18 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackjackSimulator", "src\BlackjackSimulator\BlackjackSimulator.csproj", "{598AB8A4-3B34-4670-B35A-EAC9458F0610}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{17AE3BF8-1614-4AED-9770-3567948E3A26}"
 	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-		.gitattributes = .gitattributes
-		.gitignore = .gitignore
-		LICENSE.md = LICENSE.md
 		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{16F572DD-3DBD-4D12-81A9-3754A0E456FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackjackSimulator.Cli", "src\BlackjackSimulator.Cli\BlackjackSimulator.Cli.csproj", "{B5DB7114-39B8-4558-8BF4-E2FDCCA19611}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,16 +18,16 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{598AB8A4-3B34-4670-B35A-EAC9458F0610}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{598AB8A4-3B34-4670-B35A-EAC9458F0610}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{598AB8A4-3B34-4670-B35A-EAC9458F0610}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{598AB8A4-3B34-4670-B35A-EAC9458F0610}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5DB7114-39B8-4558-8BF4-E2FDCCA19611}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5DB7114-39B8-4558-8BF4-E2FDCCA19611}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5DB7114-39B8-4558-8BF4-E2FDCCA19611}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5DB7114-39B8-4558-8BF4-E2FDCCA19611}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{598AB8A4-3B34-4670-B35A-EAC9458F0610} = {16F572DD-3DBD-4D12-81A9-3754A0E456FD}
+		{B5DB7114-39B8-4558-8BF4-E2FDCCA19611} = {16F572DD-3DBD-4D12-81A9-3754A0E456FD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3D24471F-4700-451F-8A51-F29FCB91EFA1}

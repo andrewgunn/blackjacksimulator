@@ -1,8 +1,1 @@
-# End-of-line
-* text=auto
-*.sln eol=crlf
-
-# Diffs
-*.cs diff=csharp
-*.htm diff=html
-*.html diff=html
+* text=auto eol=lf
