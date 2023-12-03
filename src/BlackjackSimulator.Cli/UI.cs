@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using ConsoleTables;
 
 namespace BlackjackSimulator.Cli;

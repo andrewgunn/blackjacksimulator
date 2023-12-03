@@ -1,3 +1,5 @@
+using System;
+
 namespace BlackjackSimulator.Cli;
 
 public class Game
