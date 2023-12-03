@@ -7,19 +7,19 @@ public class Dealer
 
     public Result CalculateResult(Hand hand)
     {
+        if (hand.IsBlackjack && !Hand.IsBlackjack)
+        {
+            return Result.Blackjack;
+        }
+
         if (hand.IsBust)
         {
             return Result.Loss;
         }
 
-        if (Hand.IsBust)
+        if  (Hand.IsBust)
         {
             return Result.Win;
-        }
-
-        if (hand.IsBlackjack && !Hand.IsBlackjack)
-        {
-            return Result.Blackjack;
         }
 
         if (hand == Hand)
@@ -27,10 +27,13 @@ public class Dealer
             return Result.Push;
         }
 
-        return hand > Hand ? Result.Win : Result.Loss;
+        return hand > Hand
+            ? Result.Win
+            : Result.Loss;
     }
 
-    public void ClearHands(Shoe shoe, IReadOnlyCollection<Player> players)
+    public void ClearHands(Shoe shoe, 
+        IEnumerable<Player> players)
     {
         shoe.DisposeHand(Hand);
         Hand = new Hand(0);
@@ -41,7 +44,8 @@ public class Dealer
         }
     }
 
-    public void Deal(Shoe shoe, IReadOnlyCollection<Player> players)
+    public void Deal(Shoe shoe, 
+        IReadOnlyCollection<Player> players)
     {
         foreach (var player in players)
         {
@@ -62,7 +66,7 @@ public class Dealer
         }
     }
 
-    public static void DealToPlayer(Shoe shoe, Hand hand)
+    public static void DealToHand(Shoe shoe, Hand hand)
     {
         if (!hand.CanTakeAnotherCard)
         {
@@ -80,22 +84,5 @@ public class Dealer
         }
 
         Hand.AddCard(shoe.TakeNextCard());
-    }
-
-    public bool DoubleDownToPlayer(Player player, Shoe shoe, Hand hand)
-    {
-        if (!player.DoubleDown(hand))
-        {
-            return false;
-        }
-
-        DealToPlayer(shoe, hand);
-
-        return true;
-    }
-
-    public override string ToString()
-    {
-        return $"D\t{Hand}";
     }
 }

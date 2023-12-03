@@ -2,12 +2,12 @@ namespace BlackjackSimulator.Cli;
 
 public static class BasicStrategy
 {
-    private static readonly Dictionary<Tuple<int, bool, int>, Move> _hardSoftMoveMappings;
-    private static readonly Dictionary<Tuple<Rank, int>, Move> _splitMoveMappings;
+    private static readonly Dictionary<Tuple<int, bool, int>, Move> s_hardSoftMoveMappings;
+    private static readonly Dictionary<Tuple<Rank, int>, Move> s_splitMoveMappings;
 
     static BasicStrategy()
     {
-        _hardSoftMoveMappings = new Dictionary<Tuple<int, bool, int>, Move>
+        s_hardSoftMoveMappings = new Dictionary<Tuple<int, bool, int>, Move>
         {
             // Player: 4-21 (Hard) Dealer: 2
             {Tuple.Create(4, false, 2), Move.Hit},
@@ -320,7 +320,7 @@ public static class BasicStrategy
             {Tuple.Create(21, true, 11), Move.Stand}
         };
 
-        _splitMoveMappings = new Dictionary<Tuple<Rank, int>, Move>
+        s_splitMoveMappings = new Dictionary<Tuple<Rank, int>, Move>
         {
             // Player: Doubles Dealer: 2
             {Tuple.Create(Rank.Two, 2), Move.Split},
@@ -483,10 +483,10 @@ public static class BasicStrategy
 
         if (hand.HasPairs)
         {
-            return _splitMoveMappings[Tuple.Create(hand.Cards.First().Rank, dealer.Hand.Value)];
+            return s_splitMoveMappings[Tuple.Create(hand.Cards.First().Rank, dealer.Hand.Value)];
         }
 
-        var move = _hardSoftMoveMappings[Tuple.Create(hand.Value, hand.IsSoft, dealer.Hand.Value)];
+        var move = s_hardSoftMoveMappings[Tuple.Create(hand.Value, hand.IsSoft, dealer.Hand.Value)];
 
         if (move == Move.Double && hand.Cards.Count > 2)
         {

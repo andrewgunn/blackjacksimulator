@@ -15,8 +15,8 @@ public class Player
         _results = new List<Result>();
         _hands = new List<Hand>();
     }
-
-    public bool IsCardCounting { get; }
+    
+    private bool IsCardCounting { get; }
     public IReadOnlyCollection<Hand> Hands => _hands;
     public decimal MaximumMoney { get; private set; }
     public decimal MinimumMoney { get; private set; }
@@ -50,78 +50,71 @@ public class Player
         _hands.Clear();
     }
 
-    public bool DoubleDown(Hand hand)
+    public void DoubleDown(Hand hand)
     {
-        if (hand.HasDoubledBet)
+        if (Money < hand.Bet)
         {
-            return false;
+            throw new Exception("Player doesn't have enough money to double down.");
         }
+        
+        hand.DoubleBet();
 
         Money -= hand.Bet;
-
-        return hand.DoubleBet();
     }
 
-    public void PlaceBet(Shoe shoe, int minimumBet)
+    public void PlaceBet(Shoe shoe, decimal minimumBet)
     {
+        if (Money < minimumBet)
+        {
+            throw new Exception("Player doesn't have enough money to place minimum bet.");
+        }
+        
         var bet = minimumBet;
 
         if (IsCardCounting)
         {
-            if (shoe.TrueCount < -3)
+            switch (shoe.TrueCount)
             {
-                return;
-            }
-
-            if (shoe.TrueCount > 1)
-            {
-                bet = (bet * 5) * (shoe.TrueCount - 1);
+                case < -3:
+                    return;
+                case > 1:
+                    bet = bet * 5 * (shoe.TrueCount - 1);
+                    break;
             }
         }
-
-        Money -= bet;
 
         _hands.Add(new Hand(bet));
+
+        Money -= bet;
     }
 
-    public int RecordResult(Hand hand, Result result)
+    public void RecordResult(Hand hand, Result result)
     {
-        _results.Add(result);
-        var bet = hand.Bet;
+        hand.RecordResult(result);
 
-        switch (result)
+        if (result != Result.Loss)
         {
-            case Result.Blackjack:
-                Money += bet * 2 + bet / 2;
-                return bet + bet / 2;
-            case Result.Win:
-                Money += bet * 2;
-                return bet;
-            case Result.Push:
-                Money += bet;
-                return 0;
-            default:
-                return -bet;
+            Money += hand.Bet + hand.Winnings;
         }
+
+        _results.Add(result);
     }
 
-    public IReadOnlyCollection<Hand> SplitHand(Hand hand, int minimumBet)
+    public IReadOnlyCollection<Hand> SplitHand(Hand hand, 
+        decimal minimumBet)
     {
-        Money -= minimumBet;
-
+        if (Money < minimumBet)
+        {
+            throw new Exception("Player doesn't have enough money to split the hand.");
+        }
+        
         var hands = hand.Split();
 
         _hands.Remove(hand);
         _hands.AddRange(hands);
 
+        Money -= minimumBet;
+
         return hands;
-    }
-
-    public override string ToString()
-    {
-        var winCount = Results.Count(r => r == Result.Win);
-        var lossCount = Results.Count(r => r == Result.Loss);
-
-        return $"{Name}\tMoney = {Money:C2} Max: {MaximumMoney:C2} Min: {MinimumMoney:C2} Win/Loss: {winCount}/{lossCount}";
     }
 }

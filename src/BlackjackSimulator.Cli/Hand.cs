@@ -1,19 +1,21 @@
 namespace BlackjackSimulator.Cli;
 
-public class Hand(int bet) : IEquatable<Hand>
+public class Hand(decimal bet) : IEquatable<Hand>
 {
     private readonly List<Card> _cards = new();
 
-    public int Bet { get; private set; } = bet;
+    public decimal Bet => bet;
     public bool CanTakeAnotherCard => HasBet && (!HasDoubledBet || Cards.Count == 2) && !IsBust && !IsBlackjack && (!WasSplit || HasPairs || Cards.First().Rank != Rank.Ace || Cards.Count == 1);
     public IReadOnlyCollection<Card> Cards => _cards;
     public bool HasBet => Bet > 0;
-    public bool HasDoubledBet { get; private set; }
+    private bool HasDoubledBet { get; set; }
     public bool HasPairs => Cards.Count == 2 && Cards.Select(c => c.Rank).Distinct().Count() == 1;
     public bool IsBlackjack => Cards.Count == 2 && Value == 21;
     public bool IsBust => Value > 21;
     public bool IsSoft => Value < 21 && _cards.Any(c => c.Rank == Rank.Ace) && _cards.Where(c => c.Rank != Rank.Ace).Sum(c => c.Value) + _cards.Count(c => c.Rank == Rank.Ace) <= 11;
-    public bool WasSplit { get; private set; }
+    public Result Result { get; private set; }
+    public decimal Winnings { get; private set; }
+    private bool WasSplit { get; init; }
 
     public int Value
     {
@@ -35,45 +37,45 @@ public class Hand(int bet) : IEquatable<Hand>
         _cards.Add(card);
     }
 
-    public int CompareTo(Hand b)
+    private int CompareTo(Hand b)
     {
         if (Value != b.Value)
         {
             return Value > b.Value ? 1 : -1;
         }
 
-        if (IsBlackjack && !b.IsBlackjack)
+        return IsBlackjack switch
         {
-            return 1;
-        }
-
-        if (!IsBlackjack && b.IsBlackjack)
-        {
-            return -1;
-        }
-
-        return 0;
+            true when !b.IsBlackjack => 1,
+            false when b.IsBlackjack => -1,
+            _ => 0
+        };
     }
 
     public bool DoubleBet()
     {
-        if (!HasBet || HasDoubledBet)
+        if (!HasBet)
+        {            
+            throw new Exception("Bet can't be doubled without an original bet.");
+        }
+
+        if (HasDoubledBet)
         {
-            return false;
+            throw new Exception("Bet has already been doubled.");
         }
 
         HasDoubledBet = true;
-        Bet *= 2;
+        bet *= 2;
 
         return true;
     }
 
-    public bool Equals(Hand other)
+    public bool Equals(Hand? other)
     {
-        return this == other;
+        return other is not null && this == other;
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (ReferenceEquals(obj, null))
         {
@@ -99,11 +101,33 @@ public class Hand(int bet) : IEquatable<Hand>
         }
     }
 
+    public void RecordResult(Result result)
+    {
+        Result = result;
+        
+        switch (result)
+        {
+            case Result.Blackjack:
+                Winnings = bet * 1.5M;
+                break;
+            case Result.Win:
+                Winnings = bet;
+                break;
+            case Result.Push:
+                Winnings = 0;
+                break;
+            case Result.Loss:
+            default:
+                Winnings = -bet;
+                break;
+        }
+    }
+
     public IReadOnlyCollection<Hand> Split()
     {
         if (!HasPairs)
         {
-            return new Hand[0];
+            throw new Exception("Hand cannot be split.");
         }
 
         var a = new Hand(Bet)
@@ -126,23 +150,14 @@ public class Hand(int bet) : IEquatable<Hand>
         };
     }
 
-    public override string ToString()
-    {
-        var bet = HasBet ? Bet.ToString("C0") : "-";
-
-        return $"{bet}\t{Value}\t{string.Join(" ", Cards)}";
-    }
-
     public static bool operator ==(Hand a, Hand b)
     {
-        if (ReferenceEquals(a, null) && ReferenceEquals(b, null))
+        switch (a)
         {
-            return true;
-        }
-
-        if (ReferenceEquals(a, null))
-        {
-            return false;
+            case null when ReferenceEquals(b, null):
+                return true;
+            case null:
+                return false;
         }
 
         if (ReferenceEquals(b, null))
